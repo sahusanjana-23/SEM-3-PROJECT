@@ -1,0 +1,508 @@
+import tkinter as tk
+from tkinter import messagebox
+
+# Node class for singly linked list
+class Node:
+    def __init__(self, data=None):
+        self.data = data
+        self.next = None  
+
+# Singly Linked List Class
+class SinglyLinkedList:
+    def __init__(self):
+        self.head = None
+   
+    def insert(self, data):
+        new_node = Node(data)
+        if not self.head:
+            self.head = new_node
+        else:
+            current = self.head
+            while current.next:
+                current = current.next
+            current.next = new_node
+   
+    def delete(self):
+        if not self.head:
+            return None
+        elif not self.head.next:
+            deleted_data = self.head.data
+            self.head = None
+            return deleted_data
+        else:
+            current = self.head
+            while current.next.next:
+                current = current.next
+            deleted_data = current.next.data
+            current.next = None
+            return deleted_data
+   
+    def search(self, data):
+        current = self.head
+        while current:
+            if current.data == data:
+                return True
+            current = current.next
+        return False
+   
+    def display(self):
+        elements = []
+        current = self.head
+        while current:
+            elements.append(current.data)
+            current = current.next
+        return elements
+
+# Node class for doubly linked list
+class DoublyNode:
+    def __init__(self, data=None):
+        self.data = data
+        self.next = None
+        self.prev = None
+
+# Doubly Linked List Class
+class DoublyLinkedList:
+    def __init__(self):
+        self.head = None
+   
+    def insert(self, data):
+        new_node = DoublyNode(data)
+        if not self.head:
+            self.head = new_node
+        else:
+            current = self.head
+            while current.next:
+                current = current.next
+            current.next = new_node
+            new_node.prev = current
+   
+    def delete(self):
+        if not self.head:
+            return None
+        elif not self.head.next:
+            deleted_data = self.head.data
+            self.head = None
+            return deleted_data
+        else:
+            current = self.head
+            while current.next:
+                current = current.next
+            deleted_data = current.data
+            if current.prev:
+                current.prev.next = None
+            return deleted_data
+   
+    def search(self, data):
+        current = self.head
+        while current:
+            if current.data == data:
+                return True
+            current = current.next
+        return False
+   
+    def display(self):
+        elements = []
+        current = self.head
+        while current:
+            elements.append(current.data)
+            current = current.next
+        return elements
+
+# Stack Class
+class Stack:
+    def __init__(self):
+        self.items = []
+   
+    def push(self, item):
+        self.items.append(item)
+   
+    def pop(self):
+        if not self.is_empty():
+            return self.items.pop()
+        return None
+   
+    def peek(self):
+        if not self.is_empty():
+            return self.items[-1]
+        return None
+   
+    def is_empty(self):
+        return len(self.items) == 0
+   
+    def display(self):
+        return self.items[::-1]  # Display stack in top-to-bottom order
+
+# Queue Class
+class Queue:
+    def __init__(self):
+        self.items = []
+   
+    def enqueue(self, item):
+        self.items.append(item)
+   
+    def dequeue(self):
+        if not self.is_empty():
+            return self.items.pop(0)
+        return None
+   
+    def is_empty(self):
+        return len(self.items) == 0
+   
+    def display(self):
+        return self.items  # Display queue in front-to-back order
+
+# Function to create the ADT GUI window with operations
+def open_adt_window():
+    adt_window = tk.Toplevel(root)  # Create a new window
+    adt_window.title("ADT - Abstract Data Type Operations")
+    adt_window.geometry("400x400")
+   
+    # Create a list to represent the ADT
+    adt_list = []
+   
+    # Function to insert an element into the ADT
+    def insert_element():
+        element = entry.get()
+        if element:
+            adt_list.append(element)
+            display_list()
+            messagebox.showinfo("Insert", f"Element '{element}' inserted.")
+        else:
+            messagebox.showwarning("Warning", "Please enter a value to insert.")
+   
+    # Function to delete an element from the ADT
+    def delete_element():
+        if adt_list:
+            element = adt_list.pop()
+            display_list()
+            messagebox.showinfo("Delete", f"Element '{element}' deleted.")
+        else:
+            messagebox.showwarning("Warning", "ADT is empty!")
+   
+    # Function to search for an element in the ADT
+    def search_element():
+        element = entry.get()
+        if element in adt_list:
+            messagebox.showinfo("Search", f"Element '{element}' found in ADT.")
+        else:
+            messagebox.showwarning("Search", f"Element '{element}' not found in ADT.")
+   
+    # Function to display the current state of the ADT
+    def display_list():
+        adt_display.config(text=", ".join(adt_list) if adt_list else "ADT is empty")
+
+    # Heading for ADT window
+    heading = tk.Label(adt_window, text="ADT Operations", font=("Helvetica", 16), fg="blue")
+    heading.pack(pady=20)
+   
+    # Entry field to input elements
+    entry_label = tk.Label(adt_window, text="Enter Element:", font=("Arial", 12))
+    entry_label.pack(pady=5)
+   
+    entry = tk.Entry(adt_window, font=("Arial", 12))
+    entry.pack(pady=5)
+   
+    # Buttons for ADT operations: Insert, Delete, Search, and Display
+    insert_button = tk.Button(adt_window, text="Insert", command=insert_element, bg="lightgreen", font=("Arial", 12))
+    insert_button.pack(pady=5)
+   
+    delete_button = tk.Button(adt_window, text="Delete", command=delete_element, bg="lightcoral", font=("Arial", 12))
+    delete_button.pack(pady=5)
+   
+    search_button = tk.Button(adt_window, text="Search", command=search_element, bg="lightblue", font=("Arial", 12))
+    search_button.pack(pady=5)
+   
+    # Label to display the current elements in the ADT
+    adt_display = tk.Label(adt_window, text="ADT is empty", font=("Arial", 12), fg="black")
+    adt_display.pack(pady=20)
+   
+    # Button to display the current ADT
+    display_button = tk.Button(adt_window, text="Display ADT", command=display_list, bg="orange", font=("Arial", 12))
+    display_button.pack(pady=10)
+
+# Function to create the Singly Linked List GUI window with operations
+def open_singly_linked_list_window():
+    sll_window = tk.Toplevel(root)  # Create a new window
+    sll_window.title("Singly Linked List Operations")
+    sll_window.geometry("400x400")
+   
+    # Create the Singly Linked List instance
+    sll = SinglyLinkedList()
+   
+    # Function to insert an element
+    def insert_element():
+        element = entry.get()
+        if element:
+            sll.insert(element)
+            display_list()
+            messagebox.showinfo("Insert", f"Element '{element}' inserted.")
+        else:
+            messagebox.showwarning("Warning", "Please enter a value to insert.")
+   
+    # Function to delete an element
+    def delete_element():
+        deleted_element = sll.delete()
+        if deleted_element:
+            display_list()
+            messagebox.showinfo("Delete", f"Element '{deleted_element}' deleted.")
+        else:
+            messagebox.showwarning("Warning", "List is empty!")
+   
+    # Function to search for an element
+    def search_element():
+        element = entry.get()
+        if sll.search(element):
+            messagebox.showinfo("Search", f"Element '{element}' found in the list.")
+        else:
+            messagebox.showwarning("Search", f"Element '{element}' not found in the list.")
+   
+    # Function to display the current state of the list
+    def display_list():
+        elements = sll.display()
+        list_display.config(text=" -> ".join(elements) if elements else "List is empty")
+   
+    # Heading for the window
+    heading = tk.Label(sll_window, text="Singly Linked List Operations", font=("Helvetica", 16), fg="blue")
+    heading.pack(pady=20)
+   
+    # Entry field to input elements
+    entry_label = tk.Label(sll_window, text="Enter Element:", font=("Arial", 12))
+    entry_label.pack(pady=5)
+   
+    entry = tk.Entry(sll_window, font=("Arial", 12))
+    entry.pack(pady=5)
+   
+    # Buttons for Singly Linked List operations
+    insert_button = tk.Button(sll_window, text="Insert", command=insert_element, bg="lightgreen", font=("Arial", 12))
+    insert_button.pack(pady=5)
+   
+    delete_button = tk.Button(sll_window, text="Delete", command=delete_element, bg="lightcoral", font=("Arial", 12))
+    delete_button.pack(pady=5)
+   
+    search_button = tk.Button(sll_window, text="Search", command=search_element, bg="lightblue", font=("Arial", 12))
+    search_button.pack(pady=5)
+   
+    # Label to display the current elements in the list
+    list_display = tk.Label(sll_window, text="List is empty", font=("Arial", 12), fg="black")
+    list_display.pack(pady=20)
+   
+    # Button to display the current list
+    display_button = tk.Button(sll_window, text="Display List", command=display_list, bg="orange", font=("Arial", 12))
+    display_button.pack(pady=10)
+
+# Function to create the Doubly Linked List GUI window with operations
+def open_doubly_linked_list_window():
+    dll_window = tk.Toplevel(root)  # Create a new window
+    dll_window.title("Doubly Linked List Operations")
+    dll_window.geometry("400x400")
+   
+    # Create the Doubly Linked List instance
+    dll = DoublyLinkedList()
+   
+    # Function to insert an element
+    def insert_element():
+        element = entry.get()
+        if element:
+            dll.insert(element)
+            display_list()
+            messagebox.showinfo("Insert", f"Element '{element}' inserted.")
+        else:
+            messagebox.showwarning("Warning", "Please enter a value to insert.")
+   
+    # Function to delete an element
+    def delete_element():
+        deleted_element = dll.delete()
+        if deleted_element:
+            display_list()
+            messagebox.showinfo("Delete", f"Element '{deleted_element}' deleted.")
+        else:
+            messagebox.showwarning("Warning", "List is empty!")
+   
+    # Function to search for an element
+    def search_element():
+        element = entry.get()
+        if dll.search(element):
+            messagebox.showinfo("Search", f"Element '{element}' found in the list.")
+        else:
+            messagebox.showwarning("Search", f"Element '{element}' not found in the list.")
+   
+    # Function to display the current state of the list
+    def display_list():
+        elements = dll.display()
+        list_display.config(text=" <-> ".join(elements) if elements else "List is empty")
+   
+    # Heading for the window
+    heading = tk.Label(dll_window, text="Doubly Linked List Operations", font=("Helvetica", 16), fg="blue")
+    heading.pack(pady=20)
+   
+    # Entry field to input elements
+    entry_label = tk.Label(dll_window, text="Enter Element:", font=("Arial", 12))
+    entry_label.pack(pady=5)
+   
+    entry = tk.Entry(dll_window, font=("Arial", 12))
+    entry.pack(pady=5)
+   
+    # Buttons for Doubly Linked List operations
+    insert_button = tk.Button(dll_window, text="Insert", command=insert_element, bg="lightgreen", font=("Arial", 12))
+    insert_button.pack(pady=5)
+   
+    delete_button = tk.Button(dll_window, text="Delete", command=delete_element, bg="lightcoral", font=("Arial", 12))
+    delete_button.pack(pady=5)
+   
+    search_button = tk.Button(dll_window, text="Search", command=search_element, bg="lightblue", font=("Arial", 12))
+    search_button.pack(pady=5)
+   
+    # Label to display the current elements in the list
+    list_display = tk.Label(dll_window, text="List is empty", font=("Arial", 12), fg="black")
+    list_display.pack(pady=20)
+   
+    # Button to display the current list
+    display_button = tk.Button(dll_window, text="Display List", command=display_list, bg="orange", font=("Arial", 12))
+    display_button.pack(pady=10)
+
+# Function to create the Stack GUI window with operations
+def open_stack_window():
+    stack_window = tk.Toplevel(root)  # Create a new window
+    stack_window.title("Stack Operations")
+    stack_window.geometry("400x400")
+   
+    # Create the Stack instance
+    stack = Stack()
+   
+    # Function to push an element onto the stack
+    def push_element():
+        element = entry.get()
+        if element:
+            stack.push(element)
+            display_stack()
+            messagebox.showinfo("Push", f"Element '{element}' pushed onto the stack.")
+        else:
+            messagebox.showwarning("Warning", "Please enter a value to push.")
+   
+    # Function to pop an element from the stack
+    def pop_element():
+        popped_element = stack.pop()
+        if popped_element is not None:
+            display_stack()
+            messagebox.showinfo("Pop", f"Element '{popped_element}' popped from the stack.")
+        else:
+            messagebox.showwarning("Warning", "Stack is empty!")
+   
+    # Function to display the current state of the stack
+    def display_stack():
+        elements = stack.display()
+        stack_display.config(text="Top -> " + " -> ".join(elements) if elements else "Stack is empty")
+   
+    # Heading for the window
+    heading = tk.Label(stack_window, text="Stack Operations", font=("Helvetica", 16), fg="blue")
+    heading.pack(pady=20)
+   
+    # Entry field to input elements
+    entry_label = tk.Label(stack_window, text="Enter Element:", font=("Arial", 12))
+    entry_label.pack(pady=5)
+   
+    entry = tk.Entry(stack_window, font=("Arial", 12))
+    entry.pack(pady=5)
+   
+    # Buttons for Stack operations
+    push_button = tk.Button(stack_window, text="Push", command=push_element, bg="lightgreen", font=("Arial", 12))
+    push_button.pack(pady=5)
+   
+    pop_button = tk.Button(stack_window, text="Pop", command=pop_element, bg="lightcoral", font=("Arial", 12))
+    pop_button.pack(pady=5)
+   
+    # Label to display the current elements in the stack
+    stack_display = tk.Label(stack_window, text="Stack is empty", font=("Arial", 12), fg="black")
+    stack_display.pack(pady=20)
+   
+    # Button to display the current stack
+    display_button = tk.Button(stack_window, text="Display Stack", command=display_stack, bg="orange", font=("Arial", 12))
+    display_button.pack(pady=10)
+
+# Function to create the Queue GUI window with operations
+def open_queue_window():
+    queue_window = tk.Toplevel(root)  # Create a new window
+    queue_window.title("Queue Operations")
+    queue_window.geometry("400x400")
+   
+    # Create the Queue instance
+    queue = Queue()
+   
+    # Function to enqueue an element
+    def enqueue_element():
+        element = entry.get()
+        if element:
+            queue.enqueue(element)
+            display_queue()
+            messagebox.showinfo("Enqueue", f"Element '{element}' enqueued.")
+        else:
+            messagebox.showwarning("Warning", "Please enter a value to enqueue.")
+   
+    # Function to dequeue an element
+    def dequeue_element():
+        dequeued_element = queue.dequeue()
+        if dequeued_element is not None:
+            display_queue()
+            messagebox.showinfo("Dequeue", f"Element '{dequeued_element}' dequeued.")
+        else:
+            messagebox.showwarning("Warning", "Queue is empty!")
+   
+    # Function to display the current state of the queue
+    def display_queue():
+        elements = queue.display()
+        queue_display.config(text="Front -> " + " -> ".join(elements) if elements else "Queue is empty")
+   
+    # Heading for the window
+    heading = tk.Label(queue_window, text="Queue Operations", font=("Helvetica", 16), fg="blue")
+    heading.pack(pady=20)
+   
+    # Entry field to input elements
+    entry_label = tk.Label(queue_window, text="Enter Element:", font=("Arial", 12))
+    entry_label.pack(pady=5)
+   
+    entry = tk.Entry(queue_window, font=("Arial", 12))
+    entry.pack(pady=5)
+   
+    # Buttons for Queue operations
+    enqueue_button = tk.Button(queue_window, text="Enqueue", command=enqueue_element, bg="lightgreen", font=("Arial", 12))
+    enqueue_button.pack(pady=5)
+   
+    dequeue_button = tk.Button(queue_window, text="Dequeue", command=dequeue_element, bg="lightcoral", font=("Arial", 12))
+    dequeue_button.pack(pady=5)
+   
+    # Label to display the current elements in the queue
+    queue_display = tk.Label(queue_window, text="Queue is empty", font=("Arial", 12), fg="black")
+    queue_display.pack(pady=20)
+   
+    # Button to display the current queue
+    display_button = tk.Button(queue_window, text="Display Queue", command=display_queue, bg="orange", font=("Arial", 12))
+    display_button.pack(pady=10)
+
+# Main Tkinter window
+root = tk.Tk()
+root.title("Data Structure Operations")
+root.geometry("300x400")
+
+# Heading for the main window
+heading = tk.Label(root, text="Data Structure Operations", font=("Helvetica", 16), fg="blue")
+heading.pack(pady=20)
+
+# Buttons for different data structure operations
+adt_button = tk.Button(root, text="ADT Operations", command=open_adt_window, bg="lightgray", font=("Arial", 12))
+adt_button.pack(pady=10)
+
+sll_button = tk.Button(root, text="Singly Linked List", command=open_singly_linked_list_window, bg="lightblue", font=("Arial", 12))
+sll_button.pack(pady=10)
+
+dll_button = tk.Button(root, text="Doubly Linked List", command=open_doubly_linked_list_window, bg="lightgreen", font=("Arial", 12))
+dll_button.pack(pady=10)
+
+stack_button = tk.Button(root, text="Stack Operations", command=open_stack_window, bg="lightcoral", font=("Arial", 12))
+stack_button.pack(pady=10)
+
+queue_button = tk.Button(root, text="Queue Operations", command=open_queue_window, bg="lightyellow", font=("Arial", 12))
+queue_button.pack(pady=10)
+
+# Run the Tkinter event loop
+root.mainloop()
+
